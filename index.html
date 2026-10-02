@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TASK 03 - QUIZ GAME APPLICATION</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#242332;color:#fff;font-family:'Space Grotesk',sans-serif;display:flex;justify-content:center;padding:24px;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(600px at 10% 10%,rgba(63,209,197,.15),transparent 60%),radial-gradient(600px at 90% 90%,rgba(100,140,255,.18),transparent)}
+.s{position:fixed;pointer-events:none}
+.s1{top:0;left:0;width:160px;height:90px;border:10px solid #3fd1c7;border-left:0;border-top:0;border-radius:0 0 60px 0}
+.s2{top:20px;right:0;width:90px;height:50px;background:#6a90d8;border-radius:50px 0 0 50px}
+.s3{bottom:0;left:0;width:130px;height:90px;border:12px solid #6a90d8;border-left:0;border-bottom:0;border-radius:0 90px 0 0;opacity:.8}
+.s4{bottom:0;right:0;width:150px;height:150px;border:12px solid #3fd1c7;border-right:0;border-bottom:0;border-radius:90px 0 0 0}
+.wrap{position:relative;z-index:2;width:100%;max-width:1150px;display:grid;grid-template-columns:1fr 440px;gap:28px}
+@media(max-width:920px){.wrap{grid-template-columns:1fr}}
+.badge{border:1.5px solid #ff3b5a;padding:7px 22px;font-weight:800;letter-spacing:.1em;font-size:13px}
+.title{font-size:44px;line-height:.9;font-weight:800;margin-top:18px}
+.title span{font-weight:400;opacity:.6;font-size:15px;letter-spacing:.2em;display:block;margin-top:8px}
+.desc{margin-top:16px;opacity:.85;font-size:14px;line-height:1.7;max-width:420px}
+.dot{position:fixed;right:20px;bottom:80px;display:grid;grid-template-columns:repeat(6,4px);gap:10px;opacity:.6}
+.dot i{width:4px;height:4px;background:#e9c97a;border-radius:50%;display:block}
+
+.card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(18px);border-radius:24px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.progress{height:6px;background:rgba(255,255,255,.12);border-radius:20px;overflow:hidden}
+.bar{height:100%;width:0%;background:linear-gradient(90deg,#3fd1c7,#6a90d8);transition:.6s}
+.top{display:flex;justify-content:space-between;margin:14px 0 10px;font-family:'JetBrains Mono';font-size:11px;opacity:.6;letter-spacing:.15em}
+.q{font-size:20px;font-weight:700;line-height:1.35;animation:up.4s}
+@keyframes up{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+.type{font-size:10px;padding:4px 8px;border-radius:6px;background:rgba(63,209,197,.18);color:#3fd1c7;display:inline-block;margin-bottom:10px}
+.opts{display:grid;gap:10px;margin-top:14px}
+.opt{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);border-radius:14px;padding:14px 14px;display:flex;gap:12px;align-items:center;cursor:pointer;transition:.2s;text-align:left;color:#fff}
+.opt:hover{transform:translateX(4px);background:rgba(255,255,255,.12)}
+.opt.sel{border-color:#3fd1c7;background:rgba(63,209,197,.18)}
+.opt.c{border-color:#4ade80;background:rgba(74,222,128,.15)}
+.opt.w{border-color:#ff5a5a;background:rgba(255,90,90,.15)}
+.b{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.12);display:grid;place-items:center;font-size:12px;flex-shrink:0}
+.fill{width:100%;padding:14px;border-radius:12px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);color:#fff;font-family:'JetBrains Mono';margin-top:12px}
+.fill:focus{outline:none;border-color:#3fd1c7}
+.btn{margin-top:16px;width:100%;border:0;border-radius:14px;padding:14px;font-weight:800;letter-spacing:.06em;background:#fff;color:#000;cursor:pointer;transition:.2s}
+.btn:hover{background:#3fd1c7;box-shadow:0 0 24px #3fd1c766}
+.btn:disabled{opacity:.35;pointer-events:none}
+.score{font-size:64px;font-weight:800;text-align:center;line-height:.9}
+.tag2{display:inline-block;padding:6px 12px;border-radius:20px;background:rgba(63,209,197,.15);color:#3fd1c7;font-size:12px;margin-top:8px}
+.list{display:grid;gap:8px;margin-top:16px}
+.item{border-radius:12px;padding:10px 12px;font-size:12px;border:1px solid rgba(255,255,255,.12)}
+</style>
+</head>
+<body>
+<div class="s s1"></div><div class="s s2"></div><div class="s s3"></div><div class="s s4"></div>
+<div class="dot"><i></i><i></i><i></i><i></i></div>
+
+<div class="wrap">
+  <div>
+   
+    <div class="title">QUIZ GAME<br>APPLICATION <span>INTERACTIVE & ANIMATED</span></div>
+    <div class="desc">
+      Develop an interactive multiple-choice quiz game that displays questions, collects answers, and provides a score at the end.<br><br>
+      You can also, add different type of Questions like, Single or Multi Select, Fill in the Blanks or more.<br><br>
+      <small style="opacity:.5">SkillCraft Technology • 5 Questions • Different types</small>
+    </div>
+  </div>
+
+  <div class="card" id="app">
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="top"><span id="qn">Q 1 / 5</span><span id="qt">SINGLE</span></div>
+    <div id="box"></div>
+    <button class="btn" id="next" disabled>NEXT →</button>
+  </div>
+</div>
+
+<script>
+const Q=[
+ {t:'single', q:'What is the correct way to select an element by ID in JS?', o:['getElement(id)','document.getElementById()','querySelectorAll()','#id'], a:1},
+ {t:'multi', q:'Which are valid ways to handle events in JavaScript? (Select all)', o:['addEventListener','onclick property','eventListener()','on attribute in HTML'], a:[0,1,3]},
+ {t:'fill', q:'Fill in the blank: _____ is used to store multiple values in a single variable in JS.', p:'Answer: e.g., Array, Object...', a:['array','arrays']},
+ {t:'single', q:'What will typeof null return?', o:['null','object','undefined','number'], a:1},
+ {t:'single', q:'Which keyword is used to handle errors?', o:['catch','try...catch','error','throw only'], a:1},
+];
+let i=0,sc=0,ans=[];
+const box=document.getElementById('box'),qn=document.getElementById('qn'),qt=document.getElementById('qt'),bar=document.getElementById('bar'),next=document.getElementById('next');
+
+function render(){
+ bar.style.width=(i/Q.length*100)+'%';
+ qn.textContent=`Q ${i+1} / ${Q.length}`; qt.textContent=Q[i].t.toUpperCase();
+ next.disabled=true; next.textContent=i===Q.length-1?'FINISH →':'NEXT →';
+ let c=Q[i];
+ let h=`<div class="type">${c.t==='single'?'SINGLE SELECT':c.t==='multi'?'MULTI SELECT':'FILL IN THE BLANK'}</div><div class="q">${c.q}</div>`;
+ if(c.t==='fill'){
+   h+=`<input class="fill" id="fi" placeholder="${c.p}" autocomplete="off">`;
+   box.innerHTML=h;
+   document.getElementById('fi').addEventListener('input',e=>next.disabled=!e.target.value.trim());
+ }else{
+   h+=`<div class="opts">${c.o.map((x,k)=>`<button class="opt" data-k="${k}"><span class="b">${String.fromCharCode(65+k)}</span>${x}</button>`).join('')}</div>`;
+   box.innerHTML=h;
+   let sel=new Set();
+   box.querySelectorAll('.opt').forEach(b=>{
+    b.onclick=()=>{
+     if(c.t==='single'){box.querySelectorAll('.opt').forEach(e=>e.classList.remove('sel')); sel=new Set([+b.dataset.k]); b.classList.add('sel'); next.disabled=false;}
+     else{if(sel.has(+b.dataset.k)){sel.delete(+b.dataset.k); b.classList.remove('sel')}else{sel.add(+b.dataset.k); b.classList.add('sel')} next.disabled=sel.size===0;}
+    }
+   });
+ }
+}
+
+function check(){
+ let c=Q[i];
+ if(c.t==='fill'){
+   let v=document.getElementById('fi').value.trim().toLowerCase();
+   let ok=c.a.some(a=>v.includes(a.toLowerCase()));
+   ans.push({ok,v}); if(ok) sc++;
+ }else if(c.t==='single'){
+   let s=box.querySelector('.opt.sel'); let k=s?+s.dataset.k:-1;
+   let ok=k===c.a; ans.push({ok,k}); if(ok) sc++;
+ }else{
+   let s=[...box.querySelectorAll('.opt.sel')].map(b=>+b.dataset.k).sort((a,b)=>a-b);
+   let ok=JSON.stringify(s)===JSON.stringify(c.a.slice().sort((a,b)=>a-b));
+   ans.push({ok,s}); if(ok) sc++;
+ }
+}
+
+next.onclick=()=>{check(); i++; if(i<Q.length) render(); else done();}
+function done(){
+ bar.style.width='100%';
+ let pct=Math.round(sc/Q.length*100);
+ box.innerHTML=`<div style="text-align:center">
+  <div style="font-size:12px;opacity:.6;letter-spacing:.2em">FINAL SCORE</div>
+  <div class="score">${sc}/${Q.length}</div>
+  <div class="tag2">${pct>=80?'Excellent 🔥':pct>=50?'Good Job ✨':'Keep Practicing 💪'} • ${pct}%</div>
+  <div class="list">${Q.map((q,k)=>`<div class="item" style="background:${ans[k].ok?'rgba(74,222,128,.12)':'rgba(255,90,90,.12)'};border-color:${ans[k].ok?'#4ade8088':'#ff5a5a88'}">${k+1}. ${q.q.substring(0,60)} <b style="float:right">${ans[k].ok?'✓':'✗'}</b></div>`).join('')}</div>
+  <button class="btn" style="margin-top:14px;background:#3fd1c7" onclick="location.reload()">RESTART ↺</button>
+ </div>`;
+ qn.textContent='COMPLETED'; qt.textContent=pct+'%'; next.style.display='none';
+}
+render();
+</script>
+</body>
+</html>
